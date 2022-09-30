@@ -44,6 +44,10 @@ userSchema.methods.validatePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
+const subscriptionSchema = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
+
 const joiUserSchema = Joi.object({
   email: Joi.string().email().trim().pattern(emailRegexp).required(),
   password: Joi.string()
@@ -61,6 +65,7 @@ const User = model("user", userSchema);
 
 const schemas = {
   joiUserSchema,
+  subscriptionSchema,
 };
 
 module.exports = {
