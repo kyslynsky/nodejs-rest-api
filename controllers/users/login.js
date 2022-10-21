@@ -1,4 +1,4 @@
-const { Unauthorized } = require("http-errors");
+const { Unauthorized, BadRequest } = require("http-errors");
 const jwt = require("jsonwebtoken");
 const { User } = require("../../models/users");
 
@@ -7,6 +7,10 @@ const { SECRET_KEY } = process.env;
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
+
+  if (!user.verify) {
+    throw new BadRequest("Email not verify");
+  }
 
   if (!user || !user.validatePassword(password)) {
     throw new Unauthorized("Email or password is wrong");
